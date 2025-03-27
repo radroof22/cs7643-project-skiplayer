@@ -18,7 +18,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 MODEL_NAME = "facebook/layerskip-llama3.2-1B"
 SUBJECTS = ["sociology"]
 SAMPLE_SIZE = 3000
-BATCH_SIZE = 8
 
 class MMLUBenchmark:
     def __init__(self, model_name="facebook/layerskip-llama3.2-1B", device=None, early_exit: int = 4):
