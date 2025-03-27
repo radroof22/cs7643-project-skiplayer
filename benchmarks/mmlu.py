@@ -64,40 +64,6 @@ class MMLUBenchmark:
         formatted_choices = '\n'.join([f"{label}. {choice}" for label, choice in zip(choice_labels, choices)])
         return f"Question: {question}\n\nChoices:\n{formatted_choices}\n\nAnswer:"
 
-    def prepare_prompts(self, questions, choices):
-        choice_labels = ['A', 'B', 'C', 'D']
-        prompts = []
-        for question, choice_set in zip(questions, choices):
-            formatted_choices = '\n'.join([f"{label}. {choice}" for label, choice in zip(choice_labels, choice_set)])
-            prompt = f"Question: {question}\n\nChoices:\n{formatted_choices}\n\nAnswer:"
-            prompts.append(prompt)
-        return prompts
-
-    def evaluate_batch(self, questions, choices):
-        prompts = self.prepare_prompts(questions, choices)
-        inputs = self.tokenizer(prompts, return_tensors="pt", padding=True, truncation=True).to(self.device)
-        
-        with torch.no_grad():
-            outputs = self.model.generate(
-                **inputs, generation_config=self.generation_config, assistant_model=self.assistant_model, max_new_tokens=10
-            )
-        
-        generated_texts = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
-        predictions = []
-        for text in generated_texts:
-            answer_line = next((line for line in text.splitlines() if line.startswith("Answer")), None)
-            if answer_line:
-                llm_answer = answer_line.split(":")[1].strip()
-                for i, label in enumerate(['A', 'B', 'C', 'D']):
-                    if label in llm_answer:
-                        predictions.append(i)
-                        break
-                else:
-                    predictions.append(np.random.randint(0, len(choices[0])))
-            else:
-                predictions.append(np.random.randint(0, len(choices[0])))
-        return predictions
-
     def evaluate_question(self, question, choices):
         """
         Evaluate a single multiple-choice question.
