@@ -1,0 +1,23 @@
+name: cs7643
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python
+  - pip
+  - numpy
+  - tqdm
+  - pandas
+  - scikit-learn
+  - conda-forge::datasets
+  - conda-forge::huggingface_hub
+  - jupyterlab  # Add JupyterLab
+
+  - pip:
+      - torch --index-url https://download.pytorch.org/whl/cu118
+      - torchvision --index-url https://download.pytorch.org/whl/cu118
+      - torchaudio --index-url https://download.pytorch.org/whl/cu118
+      - transformers
+      - accelerate
+      - sentencepiece
+      - evaluate
