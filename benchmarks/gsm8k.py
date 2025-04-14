@@ -24,6 +24,7 @@ class GSM8KBenchmark:
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name).to(self.device)
         
         self.generation_config = self.model.generation_config
+        print(f"Early exiting at layer {early_exit}")
         weights_memo = {id(w): w for w in self.model.parameters()}
         self.assistant_model = deepcopy(self.model, memo=weights_memo) 
         self.assistant_model.model.layers = self.assistant_model.model.layers[:early_exit] 
@@ -42,14 +43,17 @@ class GSM8KBenchmark:
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs, generation_config=self.generation_config, 
-                assistant_model=self.assistant_model, max_new_tokens=512
+                assistant_model=self.assistant_model, 
+                max_new_tokens=128,
             )
+
         
         generated_text = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
         generated_answer = generated_text.split("Answer:")[-1].strip()
-        print(f"Model Answer: {generated_answer}")
         actual_answer = answer.split("####")[1]
-        print(f"Actual Answer: {actual_answer}")
+        print(f"Generated Text: {generated_text}")
+
+        print(answer.lower(), generated_answer.lower())
         return int(answer.lower() in generated_text.lower())
 
     def run_benchmark(self, sample_size=None):
