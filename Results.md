@@ -129,3 +129,69 @@ This runs a benchmark using the current implementation of **LayerSkip**.
   }
 }
 ```
+
+## Base Testing with LayerSkip - Using Fixed Exit Layer of 2
+
+This runs a benchmark using the current implementation of **LayerSkip** with a lower than optimal exit layer. This is expected to have a low acceptance rate and lower tokens per second.
+
+```json
+{
+  "model": "facebook/layerskip-llama2-7B",
+  "model_args": null,
+  "seed": 42,
+  "output_dir": "./logs",
+  "model_arg": {}
+}
+```
+
+```json
+{
+  "dataset": "cnn_dm_summarization",
+  "data_path": null,
+  "random_shuffle": true,
+  "num_samples": 100,
+  "n_shot": 0,
+  "template": null
+}
+```
+
+```json
+{
+  "max_steps": 512,
+  "exit_layer": 2,
+  "num_speculations": 6,
+  "generation_strategy": "self_speculative",
+  "sample": true,
+  "temperature": 0.6,
+  "top_k": 0,
+  "top_p": 0.9,
+  "no_repeat_ngram_size": null,
+  "stop_words": null,
+  "stop_token_ids": []
+}
+```
+
+```json
+{
+  "predicted_text": {
+    "rouge-l": 0.126164048910141,
+    "rouge-1": 0.1815703809261322,
+    "rouge-2": 0.08243454247713089,
+    "rouge-3": 0.047392792999744415,
+    "bleu_score": 0,
+    "exact_match": 1745.27001953125
+  },
+  "acceptance_rate": {
+    "mean": 0.05320687802508473
+  },
+  "total_time": {
+    "mean": 11.75547928094864
+  },
+  "time_per_token": {
+    "mean": 0.023881013263016938
+  },
+  "tokens_per_second": {
+    "mean": 42.13248233795166
+  }
+}
+```
