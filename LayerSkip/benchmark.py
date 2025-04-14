@@ -48,6 +48,8 @@ class BenchmarkArguments:
     num_samples: Optional[int] = None
     n_shot: Optional[int] = 0
     template: Optional[str] = None
+    prompt_field: Optional[str] = "prompt"
+    response_field: Optional[str] = "response"
 
 @dataclass
 class EvaluationExample:
@@ -181,6 +183,8 @@ def benchmark(
         seed=seed,
         data_path=benchmark_arguments.data_path,
         template=benchmark_arguments.template,
+        prompt_field=benchmark_arguments.prompt_field,
+        response_field=benchmark_arguments.response_field
     )
     metrics = EvaluationMetrics.build_metrics()
     for i, example in enumerate(tqdm(evaluation_set)):
