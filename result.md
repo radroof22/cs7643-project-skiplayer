@@ -1,6 +1,6 @@
 ## Base Testing without LayerSkip
 
-This runs the benchmakr using the basic implementation of auto-regressive generation.
+This runs the benchmark using the basic implementation of auto-regressive generation.
 
 ```json
 {
