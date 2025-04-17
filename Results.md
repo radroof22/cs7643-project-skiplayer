@@ -195,3 +195,69 @@ This runs a benchmark using the current implementation of **LayerSkip** with a l
   }
 }
 ```
+
+## Dynamic Early Exit - Exit on repeated token production
+
+This runs a benchmark using a modified implementation of **LayerSkip** with the draft model exiting once it sees the same token twice.
+
+```json
+{
+  "model": "facebook/layerskip-llama2-7B",
+  "model_args": null,
+  "seed": 42,
+  "output_dir": "./logs",
+  "model_arg": {}
+}
+```
+
+```json
+{
+  "dataset": "cnn_dm_summarization",
+  "data_path": null,
+  "random_shuffle": true,
+  "num_samples": 100,
+  "n_shot": 0,
+  "template": null
+}
+```
+
+```json
+{
+  "max_steps": 512,
+  "exit_layer": 8,
+  "num_speculations": 6,
+  "generation_strategy": "self_speculative",
+  "sample": true,
+  "temperature": 0.6,
+  "top_k": 0,
+  "top_p": 0.9,
+  "no_repeat_ngram_size": null,
+  "stop_words": null,
+  "stop_token_ids": []
+}
+```
+
+```json
+{
+  "predicted_text": {
+    "rouge-l": 0.044874850660562515,
+    "rouge-1": 0.060123004019260406,
+    "rouge-2": 0.009091850370168686,
+    "rouge-3": 0.0026279911398887634,
+    "bleu_score": 0,
+    "exact_match": 1585.1099853515625
+  },
+  "acceptance_rate": {
+    "mean": 0.12566105492413043
+  },
+  "total_time": {
+    "mean": 12.026322107315064
+  },
+  "time_per_token": {
+    "mean": 0.024134453032165767
+  },
+  "tokens_per_second": {
+    "mean": 43.77809970855713
+  }
+}
+```
