@@ -34,6 +34,7 @@ class GenerationResult:
 class GenerationConfig:
     max_steps: int = 512
     exit_layer: int = -1
+    dynamic_early_exit_mode: str = 'none'
     num_speculations: int = -1
     generation_strategy: str = "autoregressive"
     sample: bool = True

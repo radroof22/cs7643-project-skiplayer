@@ -47,6 +47,7 @@ class AutoRegressiveGenerationStrategy(GenerationStrategy):
                     input_ids,
                     past_key_values,
                     generation_config.exit_layer,
+                    generation_config.dynamic_early_exit_mode,
                     exit_query_cache,
                 )
             else:
@@ -54,6 +55,7 @@ class AutoRegressiveGenerationStrategy(GenerationStrategy):
                     model,
                     input_ids,
                     past_key_values,
+                    generation_config.dynamic_early_exit_mode
                 )
             logits = model_output.logits
             if logits_processors:

@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 import torch
+import torch.nn.functional as F
 import transformers
 
 @dataclass
@@ -156,6 +157,7 @@ def forward(
     model: transformers.LlamaForCausalLM,
     input_ids: torch.Tensor,
     past_key_values: Optional[List[Tuple[torch.Tensor, torch.Tensor]]],
+    dynamic_early_exit_mode: str
 ) -> ForwardResult:
     device = input_ids.device
     batch_size, seq_length = input_ids.shape
@@ -215,6 +217,7 @@ def forward_early(
     input_ids: torch.Tensor,
     past_key_values: Optional[List[Tuple[torch.Tensor, torch.Tensor]]],
     exit_layer: int,
+    dynamic_early_exit_mode: str,
     exit_query_cache: Optional[List[torch.Tensor]],
 ) -> ForwardResult:
     device = input_ids.device
@@ -249,6 +252,8 @@ def forward_early(
     )
 
     hidden_states = inputs_embeds
+    previous_token = None
+    consistent_count = 1
     for decoder_layer in model.model.layers[:exit_layer]:
         hidden_states, past_key_values = decoder_layer(
             hidden_states,
@@ -259,6 +264,21 @@ def forward_early(
             use_cache=True,
             padding_mask=None,
         )
+
+        logits = model.lm_head(hidden_states[:, -1, :])  # (batch_size, vocab_size)
+        probs = F.softmax(logits, dim=-1)
+        predicted_token = torch.argmax(probs, dim=-1).item() 
+
+        if (predicted_token == previous_token):
+            # print(f"[Layer] Draft prediction: {predicted_token} (token ID)")
+            consistent_count += 1
+        else:
+            consistent_count = 1
+
+        if dynamic_early_exit_mode == 'consistent_tokens' and consistent_count == 4:
+            break
+
+        previous_token = predicted_token
 
     past_key_values = past_key_values.to_legacy_cache()
 

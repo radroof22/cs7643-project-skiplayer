@@ -45,6 +45,7 @@ def main(args: Arguments, benchmark_arguments: BenchmarkArguments, generation_co
 
     ar_generation_config = copy(generation_config)
     ar_generation_config.exit_layer = -1
+    ar_generation_config.dynamic_early_exit_mode = 'none'
     ar_generation_config.num_speculations = -1
 
     # initialize generator

@@ -57,6 +57,7 @@ def test_single_step_speculation_handling_eos(model_and_config):
         eos_token_ids=eos_token_ids,
         calls=0,
         exit_layer=generation_config.exit_layer,
+        dynamic_early_exit_mode=generation_config.dynamic_early_exit_mode,
         sample=generation_config.sample,
         temperature=generation_config.temperature,
         top_k=generation_config.top_k,
