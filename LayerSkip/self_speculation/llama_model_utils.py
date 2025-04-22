@@ -12,6 +12,8 @@ import torch
 import torch.nn.functional as F
 import transformers
 
+import random
+
 @dataclass
 class ForwardResult:
     logits: torch.Tensor
@@ -254,6 +256,10 @@ def forward_early(
     hidden_states = inputs_embeds
     previous_token = None
     consistent_count = 1
+
+    layer_num = 0
+    random_layer = random.randint(exit_layer // 4, exit_layer // 4 * 3)
+
     for decoder_layer in model.model.layers[:exit_layer]:
         hidden_states, past_key_values = decoder_layer(
             hidden_states,
@@ -277,8 +283,13 @@ def forward_early(
 
         if dynamic_early_exit_mode == 'consistent_tokens' and consistent_count == 4:
             break
+        if dynamic_early_exit_mode == 'random' and layer_num == random_layer:
+            break
+        if dynamic_early_exit_mode == 'logits_current' and (torch.max(probs, dim=-1).values > 0.0003).item():
+            break
 
         previous_token = predicted_token
+        layer_num += 1
 
     past_key_values = past_key_values.to_legacy_cache()
 
@@ -293,7 +304,7 @@ def forward_early(
     logits = model.lm_head(hidden_states)
     return ForwardResult(
         logits=logits, past_key_values=past_key_values, exit_query_cache=exit_query_cache
-    )
+    ), random_layer
 
 
 # TODO: update forward_remainder(...) to use transformers' new KV cache implementation rather than legacy.

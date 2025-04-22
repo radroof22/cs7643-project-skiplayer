@@ -48,6 +48,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
         calls: int = 0
         total_draft_matches = 0
         total_generations = 0
+        current_exit_layer = generation_config.exit_layer
         while len(output_ids) < generation_config.max_steps:
             (
                 input_ids,
@@ -55,6 +56,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
                 past_key_values,
                 number_of_matches,
                 num_speculations,
+                new_exit_layer
             ) = self.single_step_speculation(
                 model=model,
                 input_ids_list=input_ids_list,
@@ -65,7 +67,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
                     generation_config.max_steps - len(output_ids) - 1,
                 ),
                 past_key_values=past_key_values,
-                exit_layer=generation_config.exit_layer,
+                exit_layer=current_exit_layer,
                 dynamic_early_exit_mode=generation_config.dynamic_early_exit_mode,
                 eos_token_ids=eos_token_ids,
                 calls=calls,
@@ -77,6 +79,8 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
                 stopping_criteria=stopping_criteria,
                 streamer=streamer,
             )
+            if (generation_config.dynamic_early_exit_mode == 'logits_future'):
+                current_exit_layer = new_exit_layer
             calls += 1
             total_draft_matches += number_of_matches
             total_generations += num_speculations
@@ -126,8 +130,9 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
         if sample:
             draft_probabilities: List[torch.Tensor] = []
         exit_query_cache = None
+        new_exit_layer = exit_layer
         for _ in range(num_speculations):
-            draft_result = forward_early(
+            draft_result, new_exit_layer = forward_early(
                 model,
                 draft_input_ids,
                 past_key_values,
@@ -229,4 +234,5 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
             past_key_values,
             number_of_matches,
             draft_output_ids.numel(),
+            new_exit_layer
         )

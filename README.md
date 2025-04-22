@@ -15,4 +15,7 @@ When running benchmark.py, you can add in the dynamic_early_exit_mode flag. Curr
 torchrun benchmark.py --model facebook/layerskip-llama2-7B     --dataset cnn_dm_summarization     --num_samples 100     --generation_strategy self_speculative     --exit_layer 8     --num_speculations 6     --output_dir ./logs --dynamic_early_exit_mode consistent_tokens
 ```
 
-You can either omit the dynamic_early_exit_mode flag or set it to 'none' to use the original benchmarking code.
+You can either omit the dynamic_early_exit_mode flag or set it to 'none' to use the original benchmarking code. Other options:
+random - randomly exit at a layer between the first and fourth quartile
+logits_current - use logits at each layer to exit when we reach a desired confidence threshold
+logits_future - use logits at each layer to modify the exit layer for future generations (work in progress)
