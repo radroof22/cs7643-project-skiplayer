@@ -34,13 +34,13 @@ torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_json
 # NQ-Open
 
 ```
-torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_jsonl     --num_samples 100     --generation_strategy self_speculative     --exit_layer 8     --num_speculations 6     --output_dir ./logs --data_path ../custom_datasets/nq_open_val.jsonl --prompt_field prompt --response_field answer
+torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_jsonl --num_samples 100 --generation_strategy self_speculative --exit_layer 8 --num_speculations 6 --output_dir ./logs --data_path custom_datasets/nq_open_val.jsonl --prompt_field question --response_field answer
 ```
 
 # RACE
 
 ```
-torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_jsonl     --num_samples 100     --generation_strategy self_speculative     --exit_layer 8     --num_speculations 6     --output_dir ./logs --data_path ../custom_datasets/race_test.jsonl --prompt_field prompt --response_field answer
+torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_jsonl --num_samples 100 --generation_strategy self_speculative --exit_layer 8 --num_speculations 6 --output_dir ./logs --data_path custom_datasets/race_test.jsonl --prompt_field question --response_field answer
 ```
 
 # ARC
