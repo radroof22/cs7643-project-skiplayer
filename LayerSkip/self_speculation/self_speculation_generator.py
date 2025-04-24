@@ -69,6 +69,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
                 past_key_values=past_key_values,
                 exit_layer=current_exit_layer,
                 dynamic_early_exit_mode=generation_config.dynamic_early_exit_mode,
+                layer_skip_proportion=generation_config.layer_skip_proportion,
                 eos_token_ids=eos_token_ids,
                 calls=calls,
                 sample=generation_config.sample,
@@ -116,6 +117,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
         calls: int,
         exit_layer: int,
         dynamic_early_exit_mode: str,
+        layer_skip_proportion: float,
         sample: Optional[bool] = False,
         temperature: Optional[float] = 0.7,
         top_k: Optional[int] = 50,
@@ -138,6 +140,7 @@ class SelfSpeculativeGenerationStrategy(GenerationStrategy):
                 past_key_values,
                 exit_layer,
                 dynamic_early_exit_mode,
+                layer_skip_proportion,
                 exit_query_cache,
             )
             past_key_values = draft_result.past_key_values

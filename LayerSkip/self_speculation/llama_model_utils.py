@@ -159,7 +159,8 @@ def forward(
     model: transformers.LlamaForCausalLM,
     input_ids: torch.Tensor,
     past_key_values: Optional[List[Tuple[torch.Tensor, torch.Tensor]]],
-    dynamic_early_exit_mode: str
+    dynamic_early_exit_mode: str,
+    layer_skip_proportion: float,
 ) -> ForwardResult:
     device = input_ids.device
     batch_size, seq_length = input_ids.shape
@@ -220,6 +221,7 @@ def forward_early(
     past_key_values: Optional[List[Tuple[torch.Tensor, torch.Tensor]]],
     exit_layer: int,
     dynamic_early_exit_mode: str,
+    layer_skip_proportion: float,
     exit_query_cache: Optional[List[torch.Tensor]],
 ) -> ForwardResult:
     device = input_ids.device
@@ -260,7 +262,13 @@ def forward_early(
     layer_num = 0
     random_layer = random.randint(exit_layer // 4, exit_layer // 4 * 3)
 
+    first_layer_done = False
+
     for decoder_layer in model.model.layers[:exit_layer]:
+        if first_layer_done and torch.rand(1).item() < layer_skip_proportion:
+            continue
+        first_layer_done = True
+
         hidden_states, past_key_values = decoder_layer(
             hidden_states,
             attention_mask=attention_mask,
