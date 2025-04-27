@@ -12,6 +12,8 @@ dependencies:
   - conda-forge::datasets
   - conda-forge::huggingface_hub
   - jupyterlab  # Add JupyterLab
+  - matplotlib
+  - seaborn
 
   - pip:
       - torch --index-url https://download.pytorch.org/whl/cu118
