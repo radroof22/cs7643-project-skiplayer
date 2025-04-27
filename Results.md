@@ -328,7 +328,7 @@ This runs a benchmark using a modified implementation of **LayerSkip** with the 
 }
 ```
 
-## Dynamic Early Exit - Exit on four repetitions of a token
+## Dynamic Early Exit - Improved Early Exit
 
 This runs a benchmark using a modified implementation of **LayerSkip** with the draft model learning when to exit early.
 
