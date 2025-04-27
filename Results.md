@@ -327,3 +327,32 @@ This runs a benchmark using a modified implementation of **LayerSkip** with the 
   }
 }
 ```
+
+## Dynamic Early Exit - Exit on four repetitions of a token
+
+This runs a benchmark using a modified implementation of **LayerSkip** with the draft model learning when to exit early.
+
+```json
+{
+  "predicted_text": {
+    "rouge-l": 0.13356323540210724,
+    "rouge-1": 0.18625611066818237,
+    "rouge-2": 0.08738422393798828,
+    "rouge-3": 0.05173714458942413,
+    "bleu_score": 0,
+    "exact_match": 1696.1199951171875
+  },
+  "acceptance_rate": {
+    "mean": 0.7538400046527386
+  },
+  "total_time": {
+    "mean": 12.226188001632691
+  },
+  "time_per_token": {
+    "mean": 0.026674195602536203
+  },
+  "tokens_per_second": {
+    "mean": 40.49301971435547
+  }
+}
+```
