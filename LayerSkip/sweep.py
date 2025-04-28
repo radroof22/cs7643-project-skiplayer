@@ -48,6 +48,7 @@ def sweep(args: Arguments, benchmark_arguments: BenchmarkArguments, generation_c
         for num_speculations in range(sweep_arguments.num_speculations_first, sweep_arguments.num_speculations_last+1, sweep_arguments.num_speculations_step):
             generation_config.exit_layer = exit_layer
             generation_config.dynamic_early_exit_mode = 'none'
+            generation_config.layer_skip_proportion = 0.0
             generation_config.num_speculations = num_speculations
 
             metric_result = benchmark(model, tokenizer, benchmark_arguments, generation_config, args.seed)
