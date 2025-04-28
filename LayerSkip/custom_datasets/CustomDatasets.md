@@ -16,7 +16,7 @@ torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_json
 # MMLU
 
 ```
-torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_jsonl --num_samples 100 --generation_strategy self_speculative --exit_layer 8 --num_speculations 6 --output_dir ./logs --data_path custom_datasets/mmlu_test.jsonl --prompt_field question --response_field answer
+torchrun benchmark.py --model facebook/layerskip-llama2-7B --dataset custom_jsonl --num_samples 100 --generation_strategy self_speculative --exit_layer 8 --num_speculations 6 --output_dir ./logs --data_path custom_datasets/mmlu_test_fixed.jsonl --prompt_field question --response_field answer
 ```
 
 # BoolQ
