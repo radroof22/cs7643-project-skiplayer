@@ -201,7 +201,9 @@ def benchmark(
             print("Skipping metrics of empty generation")
             # TBD: print stats of emprty generations
             continue
+        example.output = str(example.output)
         metrics.update(example, response)
+
 
     metric_result = metrics.compute()
 
